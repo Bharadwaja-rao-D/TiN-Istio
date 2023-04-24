@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: yolov5-cloud2
+  labels:
+    app: yolov5-cloud2
+    service: yolov5-cloud2
+spec:
+  ports:
+  - port: 5000
+    targetPort: 5000
+    name: http
+  selector:
+    app: yolov5-cloud2
+
+
+---
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yolov5
+  labels:
+    app: yolov5-cloud2
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yolov5-cloud2
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: yolov5-cloud2
+        version: v1
+    spec:
+      containers:
+      - name: yolov5
+        image: bharadwajarao/yolov5-cloud
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
